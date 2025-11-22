@@ -89,6 +89,7 @@ class VideoService(QObject):
             if self.media is not None:
                 if getattr(self.parent, 'verboseLogs', False):
                     self.logger.info(self.media)
+                self.media.streams = [stream for stream in self.media.streams if hasattr(stream, 'codec_type')]
                 for codec_type in Streams.__members__:
                     setattr(self.streams, codec_type.lower(),
                             [stream for stream in self.media.streams if stream.codec_type == codec_type.lower()])
