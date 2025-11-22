@@ -33,6 +33,11 @@ from PyQt5.QtWidgets import (QCheckBox, QDialog, QDialogButtonBox, QFrame, QGrid
 from vidcutter.libs.iso639 import ISO639_2
 from vidcutter.libs.videoservice import VideoService
 
+def languageLabel(stream):
+    label = ''
+    if hasattr(stream, 'tags') and hasattr(stream.tags, 'language'):
+        label = '<b>language:</b> {}<br/>'.format(ISO639_2.get(stream.tags.language[:3], 'unknown'))
+    return label
 
 class StreamSelector(QDialog):
     def __init__(self, service: VideoService, parent=None, flags=Qt.Dialog | Qt.WindowCloseButtonHint):
@@ -110,8 +115,7 @@ class StreamSelector(QDialog):
             icon = StreamSelectorLabel('<img src=":images/{}/streams-audio.png" />'.format(self.parent.theme),
                                        checkbox, True, self)
             labeltext = '<b>index:</b> {}<br/>'.format(stream.index)
-            if hasattr(stream, 'tags') and hasattr(stream.tags, 'language'):
-                labeltext += '<b>language:</b> {}<br/>'.format(ISO639_2[stream.tags.language])
+            labeltext += languageLabel(stream)
             labeltext += '<b>codec:</b> {}<br/>'.format(stream.codec_long_name)
             labeltext += '<b>channels:</b> {0} &nbsp; <b>sample rate:</b> {1:.2f} kHz' \
                          .format(stream.channels, sameplerate)
@@ -148,8 +152,7 @@ class StreamSelector(QDialog):
             icon = StreamSelectorLabel('<img src=":images/{}/streams-subtitle.png" />'.format(self.parent.theme),
                                        checkbox, True, self)
             labeltext = '<b>index:</b> {}<br/>'.format(stream.index)
-            if hasattr(stream, 'tags') and hasattr(stream.tags, 'language'):
-                labeltext += '<b>language:</b> {}<br/>'.format(ISO639_2[stream.tags.language])
+            labeltext += languageLabel(stream)
             labeltext += '<b>codec:</b> {}'.format(stream.codec_long_name)
             label = StreamSelectorLabel(labeltext, checkbox, False, self)
             rows = subtitlelayout.rowCount()
